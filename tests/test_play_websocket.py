@@ -97,3 +97,23 @@ def test_send_recv_assertion_error(play_json, websocket_url):
             """ % (websocket_url, websocket_url, websocket_url,)
         )
     assert play_json.variables['data'] == 'CIAO'
+
+
+def test_send_recv_timeout(play_json, websocket_url):
+    from websocket import WebSocketTimeoutException
+    with pytest.raises(WebSocketTimeoutException):
+        play_json.execute(
+            """
+            {"steps": [
+                {"provider": "play_websocket",
+                 "type": "connect",
+                 "options": {"url": "%s", "timeout": 0.5}},
+                {"provider": "play_websocket",
+                 "type": "recv",
+                 "url": "%s",
+                 "variable": "data",
+                 "variable_expression": "results.upper()",
+                 "assertion": "variables['data'] == 'CIaAO'"}
+            ]}
+            """ % (websocket_url, websocket_url,)
+        )
