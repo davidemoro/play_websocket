@@ -23,7 +23,8 @@ def test_connect(play_json, websocket_url):
     provider.command_connect(
         {'provider': 'play_websocket',
          'type': 'connect',
-         'url': websocket_url})
+         'options': {
+             'url': websocket_url}})
     assert websocket_url in provider.engine.play_websocket
     websocket = provider.engine.play_websocket[websocket_url]
     assert websocket
@@ -33,5 +34,19 @@ def test_connect(play_json, websocket_url):
     assert provider.engine._teardown[0] == websocket.close
 
 
-def test_send(play_json, websocket_url):
-    pass
+# def test_send(play_json, websocket_url):
+#     play_json.execute(
+#         """
+#         {"steps": [
+#             {"provider": "play_websocket",
+#              "type": "connect",
+#              "url": "%s"},
+#             {"provider": "play_websocket",
+#              "type": "send",
+#              "url": "%s",
+#              "payload": "ciao"}
+#         ]}
+#         """ % (websocket_url, websocket_url,)
+#     )
+#     websocket = play_json.play_websocket[websocket_url]
+#     assert websocket.recv() == 'ciao'

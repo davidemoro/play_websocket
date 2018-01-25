@@ -37,7 +37,11 @@ Connect
 
     {'type': 'connect',
      'provider': 'play_websocket',
-     'url': 'ws://echo.websocket.org/'}
+     'options': {
+         'url': 'ws://echo.websocket.org/',
+         'timeout': 2
+         }
+    }
 
 Send
 ====
