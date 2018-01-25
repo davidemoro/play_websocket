@@ -40,7 +40,7 @@ def test_send(play_json, websocket_url):
         {"steps": [
             {"provider": "play_websocket",
              "type": "connect",
-             "options": {"url": "%s", "timeout": 0.5}},
+             "options": {"url": "%s", "timeout": 5}},
             {"provider": "play_websocket",
              "type": "send",
              "url": "%s",
@@ -49,6 +49,51 @@ def test_send(play_json, websocket_url):
         """ % (websocket_url, websocket_url,)
     )
     websocket = play_json.play_websocket[websocket_url]
-    from websocket import WebSocketTimeoutException
-    with pytest.raises(WebSocketTimeoutException):
-        assert websocket.recv() == 'ciao'
+    assert websocket.recv() == 'ciao'
+
+
+def test_send_recv(play_json, websocket_url):
+    play_json.execute(
+        """
+        {"steps": [
+            {"provider": "play_websocket",
+             "type": "connect",
+             "options": {"url": "%s", "timeout": 5}},
+            {"provider": "play_websocket",
+             "type": "send",
+             "url": "%s",
+             "payload": "ciao"},
+            {"provider": "play_websocket",
+             "type": "recv",
+             "url": "%s",
+             "variable": "data",
+             "variable_expression": "results.upper()",
+             "assertion": "variables['data'] == 'CIAO'"}
+        ]}
+        """ % (websocket_url, websocket_url, websocket_url,)
+    )
+    assert play_json.variables['data'] == 'CIAO'
+
+
+def test_send_recv_assertion_error(play_json, websocket_url):
+    with pytest.raises(AssertionError):
+        play_json.execute(
+            """
+            {"steps": [
+                {"provider": "play_websocket",
+                 "type": "connect",
+                 "options": {"url": "%s", "timeout": 5}},
+                {"provider": "play_websocket",
+                 "type": "send",
+                 "url": "%s",
+                 "payload": "ciao"},
+                {"provider": "play_websocket",
+                 "type": "recv",
+                 "url": "%s",
+                 "variable": "data",
+                 "variable_expression": "results.upper()",
+                 "assertion": "variables['data'] == 'CIaAO'"}
+            ]}
+            """ % (websocket_url, websocket_url, websocket_url,)
+        )
+    assert play_json.variables['data'] == 'CIAO'
