@@ -34,19 +34,21 @@ def test_connect(play_json, websocket_url):
     assert provider.engine._teardown[0] == websocket.close
 
 
-# def test_send(play_json, websocket_url):
-#     play_json.execute(
-#         """
-#         {"steps": [
-#             {"provider": "play_websocket",
-#              "type": "connect",
-#              "url": "%s"},
-#             {"provider": "play_websocket",
-#              "type": "send",
-#              "url": "%s",
-#              "payload": "ciao"}
-#         ]}
-#         """ % (websocket_url, websocket_url,)
-#     )
-#     websocket = play_json.play_websocket[websocket_url]
-#     assert websocket.recv() == 'ciao'
+def test_send(play_json, websocket_url):
+    play_json.execute(
+        """
+        {"steps": [
+            {"provider": "play_websocket",
+             "type": "connect",
+             "options": {"url": "%s", "timeout": 0.5}},
+            {"provider": "play_websocket",
+             "type": "send",
+             "url": "%s",
+             "payload": "ciao"}
+        ]}
+        """ % (websocket_url, websocket_url,)
+    )
+    websocket = play_json.play_websocket[websocket_url]
+    from websocket import WebSocketTimeoutException
+    with pytest.raises(WebSocketTimeoutException):
+        assert websocket.recv() == 'ciao'
