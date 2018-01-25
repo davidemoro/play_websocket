@@ -28,13 +28,63 @@ More info and examples on:
 Features
 --------
 
-This project defines a new pytest-play_ command:
+This project defines new pytest-play_ commands.
+
+Connect
+=======
 
 ::
 
-    {'type': 'print', 'provider': 'play_websocket'}
+    {'type': 'connect',
+     'provider': 'play_websocket',
+     'url': 'ws://echo.websocket.org/'}
 
-You can add more commands adding new methods to the command provider implementation in ``providers.py`` module.
+Send
+====
+
+::
+
+    {'type': 'send',
+     'provider': 'play_websocket',
+     'url': 'ws://echo.websocket.org/',
+     'payload': 'Hello!'}
+
+
+Receive
+=======
+
+::
+
+    {'type': 'recv',
+     'provider': 'play_websocket',
+     'url': 'ws://echo.websocket.org/',
+     'variable': 'data',
+     'variable_expression': 'response.upper()',
+     'assertion': 'data == "HELLO!"',
+     'timeout': 10}
+
+
+Receive until
+=============
+
+If you want to filter the data returned by the websocked
+until you get what you expect::
+
+    {'provider': 'python',
+     'type': 'wait_until',
+     'expression': 'variables['data'] == "HELLO!"',
+     'timeout': 60,
+     'poll': 0,
+     'sub_commands': [
+         {
+          'type': 'recv',
+          'provider': 'play_websocket',
+          'url': 'ws://echo.websocket.org/',
+          'variable': 'data',
+          'variable_expression': 'response.upper()',
+          'timeout': 60}
+         }]
+    }
 
 Twitter
 -------
