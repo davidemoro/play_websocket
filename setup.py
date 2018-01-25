@@ -12,19 +12,17 @@ with open('CHANGES.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'pytest-play>=1.0.0',
-    # TODO: put package requirements here
+    'pytest-play>=1.3.0',
+    'websocket-client>=0.16.0'
 ]
 
 setup_requirements = [
     'pytest-runner',
-    # TODO(tierratelematics): put setup requirements (distutils extensions, etc.) here
 ]
 
 test_requirements = [
     'pytest',
     'pytest-cov',
-    # TODO: put package test requirements here
 ]
 
 setup(
