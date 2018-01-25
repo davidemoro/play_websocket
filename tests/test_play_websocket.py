@@ -3,12 +3,19 @@
 
 """Tests for `play_websocket` package."""
 
+import pytest
 
-def test_provider():
+
+@pytest.fixture(scope='session')
+def variables():
+    return {'skins': {'skin1': {'base_url': 'http://', 'credentials': {}}}}
+
+
+def test_provider(play_json):
     from play_websocket import providers
-    print_provider = providers.NewProvider(None)
-    assert print_provider.engine is None
-    print_provider.command_print(
+    provider = providers.WebSocketProvider(play_json)
+    assert provider.engine is play_json
+    provider.command_connect(
         {'provider': 'play_websocket',
-         'type': 'print',
+         'type': 'connect',
          'message': 'Hello, World!'})

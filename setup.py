@@ -36,7 +36,7 @@ setup(
     packages=find_packages(include=['play_websocket']),
     entry_points={
         'playcommands': [
-            'print = play_websocket.providers:NewProvider',
+            'play_websocket = play_websocket.providers:WebSocketProvider',
         ],
     },
     include_package_data=True,
