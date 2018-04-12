@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/tierratelematics/play_websocket
+    $ git clone git://github.com/davidemoro/play_websocket
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/tierratelematics/play_websocket/tarball/master
+    $ curl  -OL https://github.com/davidemoro/play_websocket/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/tierratelematics/play_websocket
-.. _tarball: https://github.com/tierratelematics/play_websocket/tarball/master
+.. _Github repo: https://github.com/davidemoro/play_websocket
+.. _tarball: https://github.com/davidemoro/play_websocket/tarball/master
