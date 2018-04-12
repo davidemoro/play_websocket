@@ -6,8 +6,8 @@ play websocket
 .. image:: https://img.shields.io/pypi/v/play_websocket.svg
         :target: https://pypi.python.org/pypi/play_websocket
 
-.. image:: https://img.shields.io/travis/davidemoro/play_websocket.svg
-        :target: https://travis-ci.org/davidemoro/play_websocket
+.. image:: https://travis-ci.org/davidemoro/play_websocket.svg?branch=develop
+       :target: https://travis-ci.org/davidemoro/play_websocket
 
 .. image:: https://readthedocs.org/projects/play-websocket/badge/?version=latest
         :target: https://play-websocket.readthedocs.io/en/latest/?badge=latest
