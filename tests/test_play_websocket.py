@@ -13,13 +13,13 @@ def variables():
 
 @pytest.fixture
 def websocket_url():
-    return 'ws://echo.websocket.org/'
+    return 'wss://echo.websocket.org/'
 
 
-def test_connect(play_json, websocket_url):
+def test_connect(play, websocket_url):
     from play_websocket import providers
-    provider = providers.WebSocketProvider(play_json)
-    assert provider.engine is play_json
+    provider = providers.WebSocketProvider(play)
+    assert provider.engine is play
     provider.command_connect(
         {'provider': 'play_websocket',
          'type': 'connect',
@@ -34,86 +34,90 @@ def test_connect(play_json, websocket_url):
     assert provider.engine._teardown[0] == websocket.close
 
 
-def test_send(play_json, websocket_url):
-    play_json.execute(
+def test_send(play, websocket_url):
+    play.execute_raw(
         """
-        {"steps": [
-            {"provider": "play_websocket",
-             "type": "connect",
-             "options": {"url": "%s", "timeout": 5}},
-            {"provider": "play_websocket",
-             "type": "send",
-             "url": "%s",
-             "payload": "ciao"}
-        ]}
+---
+- provider: play_websocket
+  type: connect
+  options:
+    url: "%s"
+    timeout: 5
+- provider: play_websocket
+  type: send
+  url: "%s"
+  payload: ciao
         """ % (websocket_url, websocket_url,)
     )
-    websocket = play_json.play_websocket[websocket_url]
+    websocket = play.play_websocket[websocket_url]
     assert websocket.recv() == 'ciao'
 
 
-def test_send_recv(play_json, websocket_url):
-    play_json.execute(
+def test_send_recv(play, websocket_url):
+    play.execute_raw(
         """
-        {"steps": [
-            {"provider": "play_websocket",
-             "type": "connect",
-             "options": {"url": "%s", "timeout": 5}},
-            {"provider": "play_websocket",
-             "type": "send",
-             "url": "%s",
-             "payload": "ciao"},
-            {"provider": "play_websocket",
-             "type": "recv",
-             "url": "%s",
-             "variable": "data",
-             "variable_expression": "results.upper()",
-             "assertion": "variables['data'] == 'CIAO'"}
-        ]}
+---
+- provider: play_websocket
+  type: connect
+  options:
+    url: "%s"
+    timeout: 5
+- provider: play_websocket
+  type: send
+  url: "%s"
+  payload: ciao
+- provider: play_websocket
+  type: recv
+  url: "%s"
+  variable: data
+  variable_expression: results.upper()
+  assertion: variables['data'] == 'CIAO'
         """ % (websocket_url, websocket_url, websocket_url,)
     )
-    assert play_json.variables['data'] == 'CIAO'
+    assert play.variables['data'] == 'CIAO'
 
 
-def test_send_recv_assertion_error(play_json, websocket_url):
+def test_send_recv_assertion_error(play, websocket_url):
     with pytest.raises(AssertionError):
-        play_json.execute(
+        play.execute_raw(
             """
-            {"steps": [
-                {"provider": "play_websocket",
-                 "type": "connect",
-                 "options": {"url": "%s", "timeout": 5}},
-                {"provider": "play_websocket",
-                 "type": "send",
-                 "url": "%s",
-                 "payload": "ciao"},
-                {"provider": "play_websocket",
-                 "type": "recv",
-                 "url": "%s",
-                 "variable": "data",
-                 "variable_expression": "results.upper()",
-                 "assertion": "variables['data'] == 'CIaAO'"}
-            ]}
+---
+- provider: play_websocket
+  type: connect
+  options:
+    url: "%s"
+    timeout: 5
+- provider: play_websocket
+  type: send
+  url: "%s"
+  payload: ciao
+- provider: play_websocket
+  type: recv
+  url: "%s"
+  variable: data
+  variable_expression: results.upper()
+  assertion: variables['data'] == 'CIaAO'
             """ % (websocket_url, websocket_url, websocket_url,)
         )
-    assert play_json.variables['data'] == 'CIAO'
+    assert play.variables['data'] == 'CIAO'
 
 
-def test_send_recv_timeout(play_json, websocket_url):
+def test_send_recv_timeout(play, websocket_url):
     from websocket import WebSocketTimeoutException
     with pytest.raises(WebSocketTimeoutException):
-        play_json.execute(
+        play.execute_raw(
             """
-            {"steps": [
-                {"provider": "play_websocket",
-                 "type": "connect",
-                 "options": {"url": "%s", "timeout": 0.5}},
-                {"provider": "play_websocket",
-                 "type": "recv",
-                 "url": "%s",
-                 "variable": "data",
-                 "variable_expression": "results.upper()",
-                 "assertion": "variables['data'] == 'CIaAO'"}
-            ]}
+---
+- provider: play_websocket
+  type: connect
+  options:
+    url: "%s"
+    timeout: 0.5
+- provider: play_websocket
+  type: recv
+  url: "%s"
+  variable: data
+  variable_expression: results.upper()
+  assertion: variables['data'] == 'CIaAO'
             """ % (websocket_url, websocket_url,)
         )

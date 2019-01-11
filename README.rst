@@ -35,23 +35,22 @@ Connect
 
 ::
 
-    {'type': 'connect',
-     'provider': 'play_websocket',
-     'options': {
-         'url': 'ws://echo.websocket.org/',
-         'timeout': 2
-         }
-    }
+    - type: connect
+      provider: play_websocket
+      options:
+        url: wss://echo.websocket.org/
+        timeout: 2
 
 Send
 ====
 
 ::
 
-    {'type': 'send',
-     'provider': 'play_websocket',
-     'url': 'ws://echo.websocket.org/',
-     'payload': 'Hello!'}
+    - type: send
+      provider: play_websocket
+      url: wss://echo.websocket.org/
+      payload: Hello!
+
 
 
 Receive
@@ -59,13 +58,13 @@ Receive
 
 ::
 
-    {'type': 'recv',
-     'provider': 'play_websocket',
-     'url': 'ws://echo.websocket.org/',
-     'variable': 'data',
-     'variable_expression': 'response.upper()',
-     'assertion': 'data == "HELLO!"',
-     'timeout': 10}
+    - type: recv
+      provider: play_websocket
+      url: wss://echo.websocket.org/
+      variable: data
+      variable_expression: response.upper()
+      assertion: data == 'HELLO!'
+      timeout: 10
 
 
 Receive until
@@ -74,21 +73,18 @@ Receive until
 If you want to filter the data returned by the websocked
 until you get what you expect::
 
-    {'provider': 'python',
-     'type': 'wait_until',
-     'expression': 'variables['data'] == "HELLO!"',
-     'timeout': 60,
-     'poll': 0,
-     'sub_commands': [
-         {
-          'type': 'recv',
-          'provider': 'play_websocket',
-          'url': 'ws://echo.websocket.org/',
-          'variable': 'data',
-          'variable_expression': 'response.upper()',
-          'timeout': 60}
-         }]
-    }
+    - provider: python
+      type: wait_until
+      expression: variables['data'] == 'HELLO!'
+      timeout: 60
+      poll: 0
+      sub_commands:
+      - type: recv
+        provider: play_websocket
+        url: wss://echo.websocket.org/
+        variable: data
+        variable_expression: response.upper()
+        timeout: 60
 
 Twitter
 -------
