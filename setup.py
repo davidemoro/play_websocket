@@ -27,7 +27,7 @@ test_requirements = [
 
 setup(
     name='play_websocket',
-    version='0.0.2',
+    version='0.0.3.dev0',
     description="pytest-play support for websockets",
     long_description=readme + '\n\n' + history,
     author="Davide Moro",
