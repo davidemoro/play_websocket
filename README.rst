@@ -6,15 +6,15 @@ play websocket
 .. image:: https://img.shields.io/pypi/v/play_websocket.svg
         :target: https://pypi.python.org/pypi/play_websocket
 
-.. image:: https://img.shields.io/travis/tierratelematics/play_websocket.svg
-        :target: https://travis-ci.org/tierratelematics/play_websocket
+.. image:: https://travis-ci.org/davidemoro/play_websocket.svg?branch=develop
+       :target: https://travis-ci.org/davidemoro/play_websocket
 
 .. image:: https://readthedocs.org/projects/play-websocket/badge/?version=latest
         :target: https://play-websocket.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://codecov.io/gh/tierratelematics/play_websocket/branch/develop/graph/badge.svg
-        :target: https://codecov.io/gh/tierratelematics/play_websocket
+.. image:: https://codecov.io/gh/davidemoro/play_websocket/branch/develop/graph/badge.svg
+        :target: https://codecov.io/gh/davidemoro/play_websocket
 
 
 pytest-play support for websockets
@@ -35,23 +35,22 @@ Connect
 
 ::
 
-    {'type': 'connect',
-     'provider': 'play_websocket',
-     'options': {
-         'url': 'ws://echo.websocket.org/',
-         'timeout': 2
-         }
-    }
+    - type: connect
+      provider: play_websocket
+      options:
+        url: wss://echo.websocket.org/
+        timeout: 2
 
 Send
 ====
 
 ::
 
-    {'type': 'send',
-     'provider': 'play_websocket',
-     'url': 'ws://echo.websocket.org/',
-     'payload': 'Hello!'}
+    - type: send
+      provider: play_websocket
+      url: wss://echo.websocket.org/
+      payload: Hello!
+
 
 
 Receive
@@ -59,13 +58,13 @@ Receive
 
 ::
 
-    {'type': 'recv',
-     'provider': 'play_websocket',
-     'url': 'ws://echo.websocket.org/',
-     'variable': 'data',
-     'variable_expression': 'response.upper()',
-     'assertion': 'data == "HELLO!"',
-     'timeout': 10}
+    - type: recv
+      provider: play_websocket
+      url: wss://echo.websocket.org/
+      variable: data
+      variable_expression: response.upper()
+      assertion: data == 'HELLO!'
+      timeout: 10
 
 
 Receive until
@@ -74,21 +73,18 @@ Receive until
 If you want to filter the data returned by the websocked
 until you get what you expect::
 
-    {'provider': 'python',
-     'type': 'wait_until',
-     'expression': 'variables['data'] == "HELLO!"',
-     'timeout': 60,
-     'poll': 0,
-     'sub_commands': [
-         {
-          'type': 'recv',
-          'provider': 'play_websocket',
-          'url': 'ws://echo.websocket.org/',
-          'variable': 'data',
-          'variable_expression': 'response.upper()',
-          'timeout': 60}
-         }]
-    }
+    - provider: python
+      type: wait_until
+      expression: variables['data'] == 'HELLO!'
+      timeout: 60
+      poll: 0
+      sub_commands:
+      - type: recv
+        provider: play_websocket
+        url: wss://echo.websocket.org/
+        variable: data
+        variable_expression: response.upper()
+        timeout: 60
 
 Twitter
 -------
@@ -104,7 +100,7 @@ This package was created with Cookiecutter_ and the cookiecutter-play-plugin_ (b
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
-.. _`cookiecutter-play-plugin`: https://github.com/tierratelematics/cookiecutter-play-plugin
-.. _pytest-play: https://github.com/tierratelematics/pytest-play
-.. _cookiecutter-qa: https://github.com/tierratelematics/cookiecutter-qa
+.. _`cookiecutter-play-plugin`: https://github.com/davidemoro/cookiecutter-play-plugin
+.. _pytest-play: https://github.com/davidemoro/pytest-play
+.. _cookiecutter-qa: https://github.com/davidemoro/cookiecutter-qa
 .. _`@davidemoro`: https://twitter.com/davidemoro
